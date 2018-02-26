@@ -38,15 +38,20 @@ sudo perl -MCPAN -e 'install Digest::MD5'
 
 # Running plowbot
 
-Connect to the EFNet Server:
+Connect to a EFNet Server:
 
 ```
 plowbot -e
 ```
 
-Connect to the FreeNode Server:
+Connect to a FreeNode Server:
 ```
 plowbot -f
+```
+
+Connect to a DALnet Server:
+```
+plowbot -d
 ```
 
 Note: you can add your prefered irc networks and custom flags within the config.pl file.
