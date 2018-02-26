@@ -4,7 +4,7 @@ A simple IRC Bot written in Perl. This project was intended to have a simple cha
 
 # !Triggers:
 
-** Bot-Master Triggers (non-public.) **
+**Bot-Master Triggers (non-public.)**
 * !uptime - Displays the uptime of the server the bot in running on.
 * !join [channel] - Instructs the bot to /join the specified channel.
 * !part [channel] - Instructs the bot to /part the specified channel.
@@ -12,7 +12,7 @@ A simple IRC Bot written in Perl. This project was intended to have a simple cha
 * !deop [nick] - Instructs the bot to /deop the specified nick(s).
 * !kick [nick] - Instructs the bot to /kick the specified nick(s).
 
-** Public Triggers (non-master, but master can too.) **
+**Public Triggers (non-master, but master can too.)**
 * !md5 [string] - Converts text/string to md5 hash.
 
 
