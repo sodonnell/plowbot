@@ -1,6 +1,6 @@
 # plowbot - An IRC Bot written in Perl.
 
-A simple IRC Bot written in Perl. This project was intended to have a simple channel bot for random things. It was more of an experiment in IRC Bot programming using Perl, but can be used as a boilerplate to creating your own custom IRC bot.
+A simple IRC Bot written in Perl. This project was intended to have a simple channel bot for random things. It was more of an experiment in IRC Bot programming using Perl, but can be used as a boilerplate for creating your own custom IRC bot in perl.
 
 # CPAN Modules
 The install.sh assumes that you have sudo access, and Perl/CPAN installed.
