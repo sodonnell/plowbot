@@ -33,6 +33,7 @@ The install.sh assumes that you have sudo access, and Perl/CPAN installed.
 ```
 git clone https://github.com/sodonnell/plowbot.git
 cd plowbot
+chmod +x ./install.sh
 ./install.sh
 ```
 
