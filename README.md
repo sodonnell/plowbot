@@ -39,6 +39,7 @@ cd plowbot
 Note: The install.sh script will do this for you.
 
 ```
+sudo perl -MCPAN -e 'install Switch'
 sudo perl -MCPAN -e 'install Number::Format'
 sudo perl -MCPAN -e 'install XML::RSS::Parser'
 sudo perl -MCPAN -e 'install POE::Component::IRC'
