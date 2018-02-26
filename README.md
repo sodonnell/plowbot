@@ -20,6 +20,7 @@ A simple IRC Bot written in Perl. This project was intended to have a simple cha
 The install.sh assumes that you have sudo access, and Perl/CPAN installed.
 
 ## Required Perl Modules:
+* Switch
 * POE::Component::IRC
 * Number::Format
 * XML::RSS::Parser
@@ -36,7 +37,7 @@ cd plowbot
 ```
 
 ## Installing Required Perl Modules (Manually)
-Note: The install.sh script will do this for you.
+Note: The install.sh script will do this for you, but in case you have issues, this may help.
 
 ```
 sudo perl -MCPAN -e 'install Switch'
