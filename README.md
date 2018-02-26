@@ -7,6 +7,8 @@ The install.sh assumes that you have sudo access, and Perl/CPAN installed.
 * POE::Component::IRC
 * Number::Format
 * XML::RSS::Parser
+* Digest::MD5
+
 ## Optional Perl Modules:
 * Chatbot::Eliza
 
