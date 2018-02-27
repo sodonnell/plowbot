@@ -84,7 +84,7 @@ switch($ARGV[0])
 #
 my $use_db = 0;
 
-# if $use_db = false, you can ignore the $db_ settings below.
+# if $use_db = 0, you can ignore the $db_ settings below.
 if ($use_db)
 {
     use DBI;
