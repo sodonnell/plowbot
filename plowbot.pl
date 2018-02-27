@@ -17,7 +17,7 @@
 #
 #######
 # include the configuration file.
-require 'config.pl';
+require '/etc/plowbot.cnf';
 
 # We create a new IRC object
 my $irc = POE::Component::IRC->spawn( 

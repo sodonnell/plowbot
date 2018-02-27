@@ -27,6 +27,7 @@ echo -e "Done.\n";
 #
 echo -e "Creating symbolic link to plowbot within /etc/bin";
 sudo ln -s plowbot.pl /usr/bin/plowbot;
+sudo ln -s config.pl /etc/plowbot.cnf;
 echo -e "Done.\n\n";
 
 #

@@ -21,12 +21,6 @@ $lwp->agent($agent);
 use Digest::MD5;
 my $md5 = Digest::MD5->new;
 
-my $nickname;
-my $ircname;
-my $server;
-my $master;
-my @channels;
-
 # IRC Client/Network Configuration
 #
 # Using the switch below, you can add support
@@ -39,6 +33,12 @@ my @channels;
 #
 # Configure your networks, username(s), bot master (i.e. you), and IRC Channels below.
 #
+my $nickname;
+my $ircname;
+my $server;
+my $master;
+my @channels;
+
 switch($ARGV[0])
 {
     case /^-e|^--efnet/
@@ -75,7 +75,6 @@ switch($ARGV[0])
     }
 }
 
-
 #
 # database config
 #
@@ -89,6 +88,7 @@ if ($use_db)
 {
     use DBI;
     our $db_conn;
+
     my $db_driver = 'mysql';
     my $db_host = 'localhost';
     my $db_user = 'plowbot';
