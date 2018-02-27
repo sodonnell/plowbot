@@ -15,8 +15,6 @@ sudo perl -MCPAN -e 'install Switch';
 sudo perl -MCPAN -e 'install Number::Format';
 sudo perl -MCPAN -e 'install POE::Component::IRC';
 sudo perl -MCPAN -e 'install Digest::MD5';
-
-# experimental modules.
 sudo perl -MCPAN -e 'install XML::RSS::Parser';
 sudo perl -MCPAN -e 'install Chatbot::Eliza';
 
@@ -27,7 +25,7 @@ echo -e "Done.\n";
 #
 echo -e "Creating symbolic link to plowbot within /etc/bin";
 sudo ln -s plowbot.pl /usr/bin/plowbot;
-sudo ln -s config.pl /etc/plowbot.cnf;
+sudo ln -s config.pl /etc/plowbot.conf;
 echo -e "Done.\n\n";
 
 #

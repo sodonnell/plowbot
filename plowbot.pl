@@ -13,11 +13,32 @@
 # prefer to have a dedicated (background) 'bot' process running 
 # it's own process for such functionality.
 #
-# $Id: x0dbot.pl,v 1.2 2012/03/21 10:27:29 seanodonnell Exp $
-#
-#######
+
 # include the configuration file.
-require '/etc/plowbot.cnf';
+require '/etc/plowbot.conf';
+
+use Switch;
+use Number::Format;
+use POE qw(Component::IRC);
+
+use LWP::UserAgent;
+my $lwp = LWP::UserAgent->new;
+$lwp->agent($agent);
+
+use Digest::MD5;
+my $md5 = Digest::MD5->new;
+
+use XML::RSS::Parser;
+my $parser = XML::RSS::Parser->new;
+
+# disabled by default - Eliza AI Module
+use Chatbot::Eliza; # a wee-bit of AI experiment and trickery ;p
+my $eliza = Chatbot::Eliza->new;
+
+if ($use_db)
+{
+    use DBI;
+}
 
 # We create a new IRC object
 my $irc = POE::Component::IRC->spawn( 
@@ -35,15 +56,7 @@ POE::Session->create(
  
 $poe_kernel->run();
 
-#######
-#
-# end procedures (main())
-# start subrouties
-#
-#######
-
-# We registered for all events, this will produce some debug info.
-sub _default 
+sub _default
 {
 	my ($event, $args) = @_[ARG0 .. $#_];
 	my @output = ( "$event: " );
@@ -97,21 +110,7 @@ sub irc_public
  	master_filter(@_);
  	return;
 }
-### mysql database table structure...
-#
-# CREATE TABLE `x0d_logs` (
-#  `id` mediumint(11) NOT NULL auto_increment,
-#  `nick` varchar(25) default NULL,
-#  `address` varchar(100) NOT NULL,
-#  `chan` varchar(50) default NULL,
-#  `server` varchar(50) default NULL,
-#  `textinput` varchar(255) default NULL,
-#  `logstamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-#  PRIMARY KEY  (`id`),
-#  KEY `textinput` (`textinput`)
-# ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='IRC logs via Irssi';
-#
-###
+
 sub master_filter
 {
 	my ($sender, $who, $where, $what) = @_[SENDER, ARG0 .. ARG2];
@@ -121,136 +120,142 @@ sub master_filter
 
 	if ($use_db && $db_conn)
 	{
-		my $sql_log = "INSERT INTO x0d_logs (nick,chan,address,server,textinput) VALUES ('$nick','$channel','','','$what');";
+		my $sql_log = "INSERT INTO plowbot_logs (nick,chan,address,server,textinput) VALUES ('$nick','$channel','','$server','$what');";
 		db_query($sql_log);
 	}
 
 	if ($nick eq $master || $nick eq "+$master" || $nick eq "\@$master")
 	{
 		# botmaster triggers
-		if ($what eq "!uptime")
-		{
-			$irc->yield( privmsg => $channel => "$nick: As you wish, master." );
-			my $uptime = `uptime`;
-			$irc->yield( privmsg => $channel => "$nick: $uptime" );
-		}
-		elsif ($what eq "!quit")
-		{
-			$irc->yield( privmsg => $channel => "$nick: As you wish, master." );
-			$irc->yield( quit => msg => "Nuked by: $nick" );
-			print "Exiting. The !quit command was executed by: $nick\n";
-			exit;
-		}
-		elsif ($what =~ /^!join/)
-		{
-			my $whereto = $what;
-			$whereto =~ s/^!join //;
-			print "Joining: $whereto\n";
-			$irc->yield( join => "$whereto" );
-		}
-        elsif ($what =~ /^!part/)
+        switch($what)
         {
-            my $whereto = $what;
-            $whereto =~ s/^!part //;
-            print "Parting $whereto\n";
-            $irc->yield( part => "$whereto" => msg => "$whereto Peace out!" );
+            case /^!uptime/
+            {
+                $irc->yield( privmsg => $channel => "$nick: As you wish, master." );
+                my $uptime = `uptime`;
+                $irc->yield( privmsg => $channel => "$nick: $uptime" );
+            }
+            case /^!quit/
+            {
+                $irc->yield( privmsg => $channel => "$nick: As you wish, master." );
+                $irc->yield( quit => msg => "Nuked by: $nick" );
+                print "Exiting. The !quit command was executed by: $nick\n";
+                exit;
+            }
+            case /^!join/
+            {
+                my $whereto = $what;
+                $whereto =~ s/^!join //;
+                print "Joining: $whereto\n";
+                $irc->yield( join => "$whereto" );
+            }
+            case /^!part/
+            {
+                my $whereto = $what;
+                $whereto =~ s/^!part //;
+                print "Parting $whereto\n";
+                $irc->yield( part => "$whereto" => msg => "$whereto Peace out!" );
+            }
+            case /^!kick/
+            {
+                my $who = $what;
+                $who =~ s/^!kick //;
+                print "Kicking: $who\n";
+                $irc->yield( kick => $channel => msg => "$who *b00ted*" );
+            }
+           case /^!ai/
+            {
+                # AI testing with Eliza
+                my $reply = $eliza->transform($what);
+                $irc->yield( privmsg => $channel => "$nick: $reply" );
+            }
+            case /^!op/
+            {
+                my $who = $what;
+                $who =~ s/^!op //;
+                if ($who)
+                {
+                    print "Op'ing Minion: $who\n";
+                }
+                else
+                {
+                    $who = $master;
+                    print "Op'ing Master: $who\n";
+                }
+                $irc->yield( mode => $channel => "+o $who" );
+            }
+            case /^!deop/
+            {
+                my $who = $what;
+                $who =~ s/^!deop //;
+                if ($who)
+                {
+                    print "deop'ing Minion: $who\n";
+                }
+                else
+                {
+                    $who = $master;
+                    print "deop'ing Master: $who\n";
+                }
+                $irc->yield( mode => $channel => "-o $who" );
+            }
         }
-		elsif ($what =~ /^!kick/)
-		{
-			my $who = $what;
-			$who =~ s/^!kick //;
-			print "Kicking: $who\n";
-			$irc->yield( kick => $channel => msg => "$who *b00ted*" );
-		}
-		elsif ($what =~ /^!ai/)
-		{
-			# AI testing with Eliza
-			my $reply = $eliza->transform($what);
-			$irc->yield( privmsg => $channel => "$nick: $reply" );
-		}
-		elsif ($what =~ /^!op/)
-		{
-			my $who = $what;
-			$who =~ s/^!op //;
-			if ($who)
-			{
-				print "Op'ing Minion: $who\n";
-			}
-			else
-			{
-				$who = $master;
-				print "Op'ing Master: $who\n";
-			}
-			$irc->yield( mode => $channel => "+o $who" );
-		}
-		elsif ($what =~ /^!deop/)
-		{
-			my $who = $what;
-			$who =~ s/^!deop //;
-			if ($who)
-			{
-				print "deop'ing Minion: $who\n";
-			}
-			else
-			{
-				$who = $master;
-				print "deop'ing Master: $who\n";
-			}
-			$irc->yield( mode => $channel => "-o $who" );
-		}
 	}
 
     # public (non-master) triggers
-
-    if ($what =~ /^!bitly/)
+    switch($what)
     {
-        my $url = $what;
-
-        $url =~ s/^!bitly //;
-
-        my $url_bitly;
-
-        my $api_src = "http://api.bit.ly/shorten?version=2.0.1&longUrl=".$url."&login=".$bitly_api_login."&apiKey=".$bitly_api_key;
-
-        my $response = $lwp->get($api_src);
-
-        if ($response->is_success)
+        case /^!bitly/
         {
-            my $raw_data = $response->decoded_content;
+            my $url = $what;
 
-            foreach my $line (split(/\n/,$raw_data))
+            $url =~ s/^!bitly //;
+
+            my $url_bitly;
+
+            # @todo Update API endpoint. This one was circa 2009.
+            my $api_src = "http://api.bit.ly/shorten?version=2.0.1&longUrl=".$url."&login=".$bitly_api_login."&apiKey=".$bitly_api_key;
+
+            my $response = $lwp->get($api_src);
+
+            if ($response->is_success)
             {
-                if ($line =~ m/shortURL/i)
+                my $raw_data = $response->decoded_content;
+
+                foreach my $line (split(/\n/,$raw_data))
                 {
-                    $line =~ s/\"//g;
-                    $line =~ s/,//g;
+                    if ($line =~ m/shortURL/i)
+                    {
+                        $line =~ s/\"//g;
+                        $line =~ s/,//g;
 
-                    my ($var,$url_bitly) = split(/:/,$line,2);
+                        my ($var,$url_bitly) = split(/:/,$line,2);
 
-                    $url_bitly =~ s/ //g;
-                    $url_bitly =~ s/\t//g;
+                        $url_bitly =~ s/ //g;
+                        $url_bitly =~ s/\t//g;
 
-                    #print "url: $url\nbitly: $url_bitly\n";
-                    $irc->yield( privmsg => $channel => "$nick (URL=SUCCESS): $url_bitly" );
-                    $irc->yield( privmsg => $channel => "$line" );
+                        #print "url: $url\nbitly: $url_bitly\n";
+                        $irc->yield( privmsg => $channel => "$nick (URL=SUCCESS): $url_bitly" );
+                        $irc->yield( privmsg => $channel => "$line" );
 
-                    last;
+                        last;
+                    }
                 }
+                print "Transformed $url to $url_bitly\n";
             }
-            print "Transformed $url to $url_bitly\n";
+            else
+            {
+                print "An error occurred while making the HTTP Request: $response->errstr\n";
+                $irc->yield( privmsg => $channel => "$nick (URL=FAIL): $response->errstr" );
+            }
         }
-        else
+        case /^!md5sum/
         {
-            print "An error occurred while making the HTTP Request: $response->errstr\n";
-            $irc->yield( privmsg => $channel => "$nick (URL=FAIL): $response->errstr" );
+            my $encstr = $what;
+            $encstr =~ s/^!md5 //;
+            my $md5sum = md5sum($encstr);
+            $irc->yield( privmsg => $channel => "$md5sum" );
         }
-	}
-    elsif ($what =~ /^!md5/)
-    {
-        my $encstr = $what;
-        $encstr =~ s/^!md5 //;
-        my $md5sum = md5($encstr);
-        $irc->yield( privmsg => $channel => "$md5sum" );
     }
 	return;
 }
@@ -297,18 +302,20 @@ sub md5checksum
 
 if ($use_db)
 {
+    my $db_dsn = 'DBI:'.$db_driver.':'. $db_name .':'.$db_host;
     our $db_conn = db_conn();
+
     sub db_conn
     {
-            my $db = DBI->connect($db_dsn, $db_user, $db_pass)
-                or return 'Connection Error: $DBI::err($DBI::errstr)';
-            return $db;
+        my $db = DBI->connect($db_dsn, $db_user, $db_pass)
+            or return 'Connection Error: $DBI::err($DBI::errstr)';
+        return $db;
     }
 
     sub db_disconn
     {
-            # my $db_conn = shift;
-            $db_conn->disconnect();
+        # my $db_conn = shift;
+        $db_conn->disconnect();
     }
 
     sub db_query
@@ -327,10 +334,3 @@ if ($use_db)
         return;
     }
 }
-
-
-#######
-#
-# end subroutines
-#
-#######

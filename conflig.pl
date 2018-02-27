@@ -7,19 +7,8 @@
 use strict;
 use warnings;
 
-# Custom HTTP User Agent string
+# Custom HTTP User Agent string for LWP::UserAgent
 my $agent = 'plowbot/1.0';
-
-use Switch;
-use Number::Format;
-use POE qw(Component::IRC);
-
-use LWP::UserAgent;
-my $lwp = LWP::UserAgent->new;
-$lwp->agent($agent);
-
-use Digest::MD5;
-my $md5 = Digest::MD5->new;
 
 # IRC Client/Network Configuration
 #
@@ -31,7 +20,8 @@ my $md5 = Digest::MD5->new;
 # You can define/extend the case below if you wish to use
 # as other arguments/flags to trigger other irc servers.
 #
-# Configure your networks, username(s), bot master (i.e. you), and IRC Channels below.
+# Configure your network(s), username(s), bot-master (i.e. you),
+# and IRC Channel(s) below.
 #
 my $nickname;
 my $ircname;
@@ -39,6 +29,7 @@ my $server;
 my $master;
 my @channels;
 
+# configure your favorite IRC networks and channels here.
 switch($ARGV[0])
 {
     case /^-e|^--efnet/
@@ -50,14 +41,14 @@ switch($ARGV[0])
         $master = 'yourmom';
         @channels = ('#privchan chanpass','#linux');
     }
-    case /^-f|--freenode/
+    case /^-f|^--freenode/
     {
         # freenode
         $nickname = 'plowbot';
         $ircname = $agent;
         $server = 'irc.freenode.net';
         $master = 'yourmom';
-        @channels = ('#sgvlug');
+        @channels = ('#plowbot');
     }
     case /^-d|^--dalnet/
     {
@@ -86,33 +77,26 @@ my $use_db = 0;
 # if $use_db = 0, you can ignore the $db_ settings below.
 if ($use_db)
 {
-    use DBI;
     our $db_conn;
 
-    my $db_driver = 'mysql';
     my $db_host = 'localhost';
     my $db_user = 'plowbot';
     my $db_pass = 'plowb0t1';
     my $db_name = 'plowbot';
-    my $db_dsn = 'DBI:'.$db_driver.':'. $db_name .':'.$db_host;
+    my $db_driver = 'mysql';
 }
 
-#
-# DISABLED MODULES
-# These modules are experimental and/or legacy modules that should not be
-# enabled by default. More work needs to be done with these and subsequent procedures.
-#
-#use XML::RSS::Parser;
-#my $parser = XML::RSS::Parser->new;
-
-# disabled by default - Eliza AI Module
-#use Chatbot::Eliza; # a wee-bit of AI experiment and trickery ;p
-#my $eliza = Chatbot::Eliza->new;
-my $eliza; # use above to enable, and comment-out this line.
-
 # disabled by default - bitly API auth config
-#my $bitly_api_login = "";
-#my $bitly_api_key = "";
+# uncomment this if you wish to
+# enable the bitly API integration features
+#my $bitly = 1; # enabled
+my $use_bitly = 0; # disabled
+
+if ($use_botly)
+{
+    my $bitly_api_login = "???";
+    my $bitly_api_key = "???";
+}
 
 sub print_help()
 {

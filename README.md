@@ -2,21 +2,35 @@
 
 A simple IRC Bot written in Perl. This project was intended to have a simple channel bot for random things. It was more of an experiment in IRC Bot programming using Perl, but can be used as a boilerplate for creating your own custom IRC bot in perl.
 
-# CPAN Modules
+# 3rd-Party Application Requirements
+
+* MySQL Server
+
+# CPAN Module Requirments
+
 The install.sh assumes that you have sudo access, and Perl/CPAN installed.
 
-## Required Perl Modules:
+The following perl modules will be installed during the installation process (aka: running install.sh)
+
 * Switch
 * POE::Component::IRC
 * Number::Format
 * Digest::MD5
 * DBD::mysql
-
-## Optional Perl Modules:
 * Chatbot::Eliza
 * XML::RSS::Parser
 
+# Configuration
+
+We suggest editing the config.pl script prior to installation. The install.sh script will place the file to the /etc/plowbot.conf file, once executed.
+
+## IRC Network/User Configuration
+## Database Configuration
+## Bitly API Client Configuration
+
 # Installation
+
+You can edit the config.pl file prior to executing the install.sh script, or you can edit it afterwards, from the following path: /etc/plowbot.conf
 ```
 git clone https://github.com/sodonnell/plowbot.git
 cd plowbot
@@ -34,10 +48,10 @@ sudo perl -MCPAN -e 'install POE::Component::IRC'
 sudo perl -MCPAN -e 'install Number::Format'
 sudo perl -MCPAN -e 'install Digest::MD5'
 sudo perl -MCPAN -e 'install DBD::mysql'
-# experimental modules (disabled for now)
 sudo perl -MCPAN -e 'install Chatbot::Eliza'
 sudo perl -MCPAN -e 'install XML::RSS::Parser'
 ```
+
 
 # Running plowbot
 
