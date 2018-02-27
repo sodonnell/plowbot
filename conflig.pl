@@ -4,17 +4,6 @@
 #
 # !!! EDITING REQUIRED !!!
 #
-
-# IRC Client/Network Configuration
-#
-# Using the switch below, you can add support
-# for multiple IRC servers. Although this bot
-# doesn't currently support connecting to multiple
-# servers in a single instance, it has the potential to.
-#
-# You can define/extend the case below if you wish to use
-# as other arguments/flags to trigger other irc servers.
-#
 use strict;
 use warnings;
 
@@ -38,7 +27,18 @@ my $server;
 my $master;
 my @channels;
 
+# IRC Client/Network Configuration
+#
+# Using the switch below, you can add support
+# for multiple IRC servers. Although this bot
+# doesn't currently support connecting to multiple
+# servers in a single instance, it has the potential to.
+#
+# You can define/extend the case below if you wish to use
+# as other arguments/flags to trigger other irc servers.
+#
 # Configure your networks, username(s), bot master (i.e. you), and IRC Channels below.
+#
 switch($ARGV[0])
 {
     case /^-e|^--efnet/
