@@ -12,6 +12,7 @@ exit;
 echo -e "Installing required perl modules via CPAN\n";
 
 # default/required modules.
+sudo perl -MCPAN -e 'install DBD::mysql';
 sudo perl -MCPAN -e 'install Switch';
 sudo perl -MCPAN -e 'install Number::Format';
 sudo perl -MCPAN -e 'install POE::Component::IRC';
