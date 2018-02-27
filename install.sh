@@ -7,8 +7,6 @@
 #
 cat logo.txt;
 
-exit;
-
 echo -e "Installing required perl modules via CPAN\n";
 
 # default/required modules.
