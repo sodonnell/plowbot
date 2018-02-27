@@ -48,7 +48,7 @@ switch($ARGV[0])
         $ircname = $agent;
         $server = 'irc.he.net';
         $master = 'yourmom';
-        @channels = ('#... redshift','#audiocafe');
+        @channels = ('#privchan chanpass','#linux');
     }
     case /^-f|--freenode/
     {
@@ -61,7 +61,7 @@ switch($ARGV[0])
     }
     case /^-d|^--dalnet/
     {
-        # efnet
+        # dalnet
         $nickname = 'plowbot';
         $ircname = $agent;
         $server = 'irc.dalnet.net';
