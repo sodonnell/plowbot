@@ -6,9 +6,15 @@
 #
 use strict;
 use warnings;
+use Env;
+
+my @ISA = qw(Exporter);
+my @EXPORT = qw(VERSION parse_config_file);
+
+my $VERSION = "1.0.0";
 
 # Custom HTTP User Agent string for LWP::UserAgent
-my $agent = 'plowbot/1.0';
+my $agent = 'plowbot/'.$VERSION;
 
 # IRC Client/Network Configuration
 #

@@ -7,7 +7,6 @@
 # Sean O'Donnell <sean@seanodonnell.com>
 # https://github.com/sodonnell
 #
-
 SCRIPT=plowbot
 SCRIPT_LOG=/var/log/plowbot.log
 
@@ -21,4 +20,3 @@ if [ $2 -e "-f" ]; then
 	echo -e "Following log file ($SCRIPT_LOG)...\n\n"
 	tail -f $SCRIPT_LOG
 fi
-

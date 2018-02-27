@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
-# Install requried perl models.
-#
 # Written by Sean O'Donnell <sean@seanodonnell.com>
 # Copyright 2009-2018 GPL License. Use it and Enjoy!
 #
+
+# display cheesy figlet logo
 cat logo.txt;
 
+# Install default/requried perl modules.
 echo -e "Installing required perl modules via CPAN\n";
 
-# default/required modules.
 sudo perl -MCPAN -e 'install DBD::mysql';
 sudo perl -MCPAN -e 'install Switch';
 sudo perl -MCPAN -e 'install Number::Format';
@@ -21,15 +21,7 @@ sudo perl -MCPAN -e 'install Chatbot::Eliza';
 echo -e "Done.\n";
 
 #
-# create symlink to /usr/bin/plowbot
-#
-echo -e "Creating symbolic link to plowbot within /etc/bin";
-sudo ln -s plowbot.pl /usr/bin/plowbot;
-sudo ln -s config.pl /etc/plowbot.conf;
-echo -e "Done.\n\n";
-
-#
-# sent to config editor
+# send to config editor
 #
 echo "Intsallation complete!\n\nWould you like to edit your configuration, now? [yes|no]\n\n";
 readline RESPONSE;
@@ -38,12 +30,19 @@ if [ $RESPONSE == "yes" ]
     vi config.pl
 if
 
-echo -e "Installation complete.\nYou can now connect to DALNet, Efnet or Freenode using the following flags:";
+#
+# create symlink to /usr/bin/plowbot and /etc/plowbot.conf
+#
+echo -e "Creating symbolic links: /etc/plowbot.conf and /usr/bin/plowbot\n";
+sudo ln -s plowbot.pl /usr/bin/plowbot;
+sudo ln -s config.pl /etc/plowbot.conf;
+echo -e "Done.\n\n";
 
+echo -e "Installation complete.\nYou can now connect to DALNet, Efnet or Freenode using the following flags:\n";
 echo -e "\n"-d|--dalnet - to connect to the DALnet network\n";
 echo -e "\n"-e|--efnet - to connect to the EFnet network\n";
 echo -e "\n"-f|--freenode - to connect to the Freenode network\n";
 
-echo -e "You can also add additional networks and flags by modifying the config.pl script.\n";
-
+echo -e "You can also add additional networks and flags by modifying /etc/plowbot.conf.\n";
+echo -e "You can view output logs for monitoring or debugging via /var/log/plowbot.log\n";
 echo -e "Enjoy!\n";
