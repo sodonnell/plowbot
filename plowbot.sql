@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `plowbot_logs` (
   `address` varchar(100) NOT NULL,
   `channel` varchar(50) default NULL,
   `server` varchar(50) default NULL,
-  `message` TEXT NOT NULL,
+  `message` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
   KEY `message` (`message`)
