@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# x0dbot.pl
+# plowbot.pl
 #
 # Sean's Experimental Freenode IRC-Op Bot written in Perl.
 #
