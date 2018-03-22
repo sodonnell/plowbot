@@ -92,13 +92,12 @@ if ($use_db)
     my $db_driver = 'mysql';
 }
 
-# disabled by default - bitly API auth config
-# uncomment this if you wish to
-# enable the bitly API integration features
+# deprecated; legacy API implementation. Needs updating;
+# leave disabled for now.
 #my $bitly = 1; # enabled
 my $use_bitly = 0; # disabled
 
-if ($use_botly)
+if ($use_bitly)
 {
     my $bitly_api_login = "???";
     my $bitly_api_key = "???";
