@@ -209,7 +209,7 @@ sub master_filter
     	# deprecated. 2010-ish API is dead.
         case /^!bitly/
         {
-            if ($use_botly)
+            if ($use_bitly)
             {
                 my $url = $what;
 
