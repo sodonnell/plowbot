@@ -15,7 +15,7 @@
 #
 
 # include the configuration file.
-require '/etc/plowbot.conf';
+require 'config.pl';
 
 use Switch;
 use Number::Format;
@@ -163,9 +163,10 @@ sub master_filter
                 print "Kicking: $who\n";
                 $irc->yield( kick => $channel => msg => "$who *b00ted*" );
             }
-           case /^!ai/
+           case /$nickname/
             {
                 # AI testing with Eliza
+		$what =~ s/$nickname//;
                 my $reply = $eliza->transform($what);
                 $irc->yield( privmsg => $channel => "$nick: $reply" );
             }
@@ -205,6 +206,7 @@ sub master_filter
     # public (non-master) triggers
     switch($what)
     {
+    	# deprecated. 2010-ish API is dead.
         case /^!bitly/
         {
             if ($use_botly)
