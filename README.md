@@ -25,8 +25,12 @@ The following perl modules will be installed during the installation process (ak
 We suggest editing the config.pl script prior to installation. The install.sh script will place the file to the /etc/plowbot.conf file, once executed.
 
 ## IRC Network/User Configuration
+
 ## Database Configuration
+
 ## Bitly API Client Configuration
+
+The Bitly API Client is currently disabled by default, as the API service is considered legacy (circa 2009) and is now deprecated.
 
 # Installation
 
