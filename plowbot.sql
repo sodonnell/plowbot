@@ -1,4 +1,4 @@
-/** plowbot mysql database schema and default table(s) */
+-- plowbot mysql database schema and default table(s) --
 CREATE DATABASE IF NOT EXISTS `plowbot`;
 
 USE plowbot;
@@ -14,3 +14,5 @@ CREATE TABLE `plowbot_logs` (
   PRIMARY KEY  (`id`),
   KEY `textinput` (`textinput`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='IRC Channel Logging Table for the PlowBot Perl Script.';
+
+-- needs plowbot_quotes table. wtf. --
