@@ -98,4 +98,4 @@ Private Message Triggers have not yet been implemented.
 * !quote - Print random quote from database (if enabled)
 
 **Deprecated Triggers**
-* !bitly [url] - returned a URL-shortened bookmark of the specified URL.
+* !bitly [url] - returns a URL-shortened bookmark of the specified URL.
