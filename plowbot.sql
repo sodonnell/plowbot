@@ -25,5 +25,5 @@ CREATE TABLE IF NOT EXISTS `plowbot_quotes` (
 PRIMARY KEY  (`id`),
 KEY `nickname` (`nickname`),
 KEY `channel` (`channel`),
-KEY `network` (`network`),
+KEY `network` (`network`)
 ) ENGINE=InnoDB;
