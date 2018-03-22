@@ -80,7 +80,7 @@ Note: you can add your prefered irc networks and custom flags within the config.
 
 # !Triggers:
 
-Currently, the plowbot only responds to triggers within a channel it has joined. 
+Currently, the plowbot only responds to triggers within an IRC channel it has joined. 
 
 Private Message Triggers have not yet been implemented.
 
