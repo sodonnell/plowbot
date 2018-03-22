@@ -15,4 +15,15 @@ CREATE TABLE IF NOT EXISTS `plowbot_logs` (
   KEY `textinput` (`textinput`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='IRC Channel Logging Table for the PlowBot Perl Script.';
 
--- needs plowbot_quotes table. wtf. --
+CREATE TABLE IF NOT EXISTS `plowbot_quotes` (
+`id` int(11) NOT NULL auto_increment,
+`quote` TEXT NOT NULL,
+`nickname` varchar(50) NOT NULL,
+`channel` varchar(50) NOT NULL,
+`network` varchar(50) NOT NULL,
+`created_at` timestamp NOT NULL default CURRENT_TIMESTAMP,
+PRIMARY KEY  (`id`),
+KEY `nickname` (`nickname`),
+KEY `channel` (`channel`),
+KEY `network` (`network`),
+) ENGINE=InnoDB;
