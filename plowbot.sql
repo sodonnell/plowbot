@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS `plowbot`;
 
 USE plowbot;
 
-CREATE TABLE `plowbot_logs` (
+CREATE TABLE IF NOT EXISTS `plowbot_logs` (
   `id` mediumint(11) NOT NULL auto_increment,
   `nick` varchar(25) default NULL,
   `address` varchar(100) NOT NULL,
