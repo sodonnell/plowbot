@@ -89,3 +89,5 @@ Private Message Triggers have not yet been implemented.
 
 **Public/Non-Bot-Master Channel Triggers**
 * !md5 [string] - Converts text/string to md5 hash.
+* !addquote [string] - Add quote to database (if enabled)
+* !quote - Print random quote from database (if enabled)
