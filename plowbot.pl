@@ -15,7 +15,7 @@
 #
 
 # include the configuration file.
-require 'config.pl';
+require '/etc/plowbot.conf';
 
 use Switch;
 use Number::Format;
