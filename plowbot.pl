@@ -256,6 +256,7 @@ sub master_filter
         }
         case /^!md5sum/
         {
+	    # deprecated. intended to encrypt strings, not files. Needs work. That requires time. Eh.
             my $encstr = $what;
             $encstr =~ s/^!md5 //;
             my $md5sum = md5sum($encstr);
