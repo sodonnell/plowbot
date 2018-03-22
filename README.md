@@ -13,6 +13,7 @@ The install.sh assumes that you have sudo access, and Perl/CPAN installed.
 The following perl modules will be installed during the installation process (aka: running install.sh)
 
 * Switch
+* LWP
 * POE::Component::IRC
 * Number::Format
 * Digest::MD5
@@ -95,3 +96,6 @@ Private Message Triggers have not yet been implemented.
 * !md5 [string] - Converts text/string to md5 hash.
 * !addquote [string] - Add quote to database (if enabled)
 * !quote - Print random quote from database (if enabled)
+
+**Deprecated Triggers**
+* !bitly [url] - returned a URL-shortened bookmark of the specified URL.
