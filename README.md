@@ -4,7 +4,7 @@ A simple IRC Bot written in Perl. This project was intended to have a simple cha
 
 # 3rd-Party Application(s) - Optional
 
-* MySQL Server - If you wish to use the !addquote/!quote channel triggers
+* MySQL Server - Most of this functionality has been deprecated, but you can easily extend the plowbot to collect data to mysql.
 
 # CPAN Module Requirments
 
@@ -26,6 +26,36 @@ The following perl modules will be installed during the installation process (ak
 We suggest editing the config.pl script prior to installation. The install.sh script will place the file to the /etc/plowbot.conf file, once executed.
 
 ## IRC Network/User Configuration
+
+In the config.pl (or resulting /etc/plowbot.conf) file, you will see a switch with various servers and channels configured.
+
+Example:
+```
+case /^-f|^--freenode/
+{
+    $nickname = 'plowbot';
+    $ircname = 'PlowBot/v1.0';
+    $server = 'irc.freenode.net';
+    $master = 'mynickname';
+    @channels = ('#privchan chanpass','#linux','#perl','#plowbot');
+}
+```
+
+This configuration example (above) would create a flag to automatically connect to the freenode IRC network, as the user 'plowbot', with a bot-master named 'mynickname'.
+
+You would then want to use the following command(s) to connect the plowbot to freenode:
+
+```
+./plowbot.pl -f
+```
+
+or 
+
+```
+./plowbot.pl -freenode
+```
+
+You can extend the cases and execution flags as you see fit, so that you can connect to any specific network or channels that you wish. There are a few cases which exist as examples.
 
 ## Database Configuration
 
