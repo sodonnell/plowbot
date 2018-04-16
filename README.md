@@ -52,7 +52,7 @@ You would then want to use the following command(s) to connect the plowbot to fr
 or 
 
 ```
-./plowbot.pl -freenode
+./plowbot.pl --freenode
 ```
 
 You can extend the cases and execution flags as you see fit, so that you can connect to any specific network or channels that you wish. There are a few cases which exist as examples.
