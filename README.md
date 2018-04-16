@@ -57,7 +57,6 @@ sudo perl -MCPAN -e 'install Chatbot::Eliza'
 sudo perl -MCPAN -e 'install XML::RSS::Parser'
 ```
 
-
 # Running plowbot
 
 Connect to a EFNet Server:
@@ -93,9 +92,9 @@ Private Message Triggers have not yet been implemented.
 * !uptime - Displays the uptime of the server the bot in running on.
 
 **Public/Non-Bot-Master Channel Triggers**
-* !md5 [string] - Converts text/string to md5 hash.
-* !addquote [string] - Add quote to database (if enabled)
-* !quote - Print random quote from database (if enabled)
+* !addquote [string] - Add quote to database
+* !quote - Print random quote from database
 
 **Deprecated Triggers**
-* !bitly [url] - returns a URL-shortened bookmark of the specified URL.
+* !md5 [string] - Converts text/string to md5 hash. *DEPRECATED*
+* !bitly [url] - returns a URL-shortened bookmark of the specified URL. *DEPRECATED/REMOVED*

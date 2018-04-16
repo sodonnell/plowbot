@@ -35,6 +35,10 @@ my $server;
 my $master;
 my @channels;
 
+# flat-file quotes data
+our $fquotes = "quotes.txt";
+our $line;
+
 # configure your favorite IRC networks and channels here.
 switch($ARGV[0])
 {
@@ -84,31 +88,45 @@ my $use_db = 0;
 if ($use_db)
 {
     our $db_conn;
-
     my $db_host = 'localhost';
     my $db_user = 'plowbot';
     my $db_pass = 'plowb0t1';
     my $db_name = 'plowbot';
     my $db_driver = 'mysql';
+    use DBI;
 }
 
-# deprecated; legacy API implementation. Needs updating;
-# leave disabled for now.
-#my $bitly = 1; # enabled
-my $use_bitly = 0; # disabled
+use Switch;
+use Number::Format;
+use POE qw(Component::IRC);
 
-if ($use_bitly)
-{
-    my $bitly_api_login = "???";
-    my $bitly_api_key = "???";
-}
+use LWP::UserAgent;
+my $lwp = LWP::UserAgent->new;
+$lwp->agent($agent);
 
-sub print_help()
-{
-    print "Usage: $0 [network flag]\n\n";
-    print "Network Flags:\n";
-    print "\t-d|--dalnet (to connect to DALnet)\n";
-    print "\t-e|--efnet (to connect to EFnet)\n";
-    print "\t-f|--freenode (to connect to freenode)";
-    # add more if you wish
-}
+# deprecated
+use Digest::MD5;
+my $md5 = Digest::MD5->new;
+
+use XML::RSS::Parser;
+my $parser = XML::RSS::Parser->new;
+
+# disabled by default - Eliza AI Module
+use Chatbot::Eliza; # a wee-bit of AI experiment and trickery ;p
+my $eliza = Chatbot::Eliza->new;
+
+# We create a new IRC object
+my $irc = POE::Component::IRC->spawn(
+    nick => $nickname,
+    ircname => $ircname,
+    server => $server,
+) or die "Error spawning the POE IRC Component: $!";
+
+POE::Session->create(
+     package_states => [
+         main => [ qw(_default _start irc_001 irc_public) ],
+     ],
+     heap => { irc => $irc },
+ );
+
+$poe_kernel->run();

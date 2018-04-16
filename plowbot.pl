@@ -17,48 +17,9 @@
 # include the configuration file.
 require '/etc/plowbot.conf';
 
-use Switch;
-use Number::Format;
-use POE qw(Component::IRC);
+# Edit most variables within the /etc/plowbot.conf file.
 
-use LWP::UserAgent;
-my $lwp = LWP::UserAgent->new;
-$lwp->agent($agent);
 
-use Digest::MD5;
-my $md5 = Digest::MD5->new;
-
-use XML::RSS::Parser;
-my $parser = XML::RSS::Parser->new;
-
-# disabled by default - Eliza AI Module
-use Chatbot::Eliza; # a wee-bit of AI experiment and trickery ;p
-my $eliza = Chatbot::Eliza->new;
-
-if ($use_db)
-{
-    use DBI;
-}
-
-# We create a new IRC object
-my $irc = POE::Component::IRC->spawn( 
-    nick => $nickname,
-    ircname => $ircname,
-    server => $server,
-) or die "Error spawning the POE IRC Component: $!";
-
-# flat-file quotes data
-our $fquotes = "quotes.txt";
-our $line;
-
-POE::Session->create(
-     package_states => [
-         main => [ qw(_default _start irc_001 irc_public) ],
-     ],
-     heap => { irc => $irc },
- );
- 
-$poe_kernel->run();
 
 sub _default
 {
@@ -111,11 +72,11 @@ sub irc_001
  
 sub irc_public 
 {
- 	master_filter(@_);
+ 	trigger_filter(@_);
  	return;
 }
 
-sub master_filter
+sub trigger_filter
 {
 	my ($sender, $who, $where, $what) = @_[SENDER, ARG0 .. ARG2];
 	
@@ -167,13 +128,7 @@ sub master_filter
                 print "Kicking: $who\n";
                 $irc->yield( kick => $channel => msg => "$who *b00ted*" );
             }
-            case /$nickname/
-            {
-                # AI testing with Eliza
-		        $what =~ s/$nickname//;
-                my $reply = $eliza->transform($what);
-                $irc->yield( privmsg => $channel => "$nick: $reply" );
-            }
+
             case /^!op/
             {
                 my $who = $what;
@@ -207,58 +162,16 @@ sub master_filter
         }
 	}
 
-    # public (non-master) triggers
+    # public/all user triggers
     switch($what)
     {
-    	# deprecated. 2010-ish API is dead.
-        case /^!bitly/
+        case /$nickname/
         {
-            if ($use_bitly)
-            {
-                my $url = $what;
-
-                $url =~ s/^!bitly //;
-
-                my $url_bitly;
-
-                # @todo Update API endpoint. This one was circa 2009.
-                my $api_src = "http://api.bit.ly/shorten?version=2.0.1&longUrl=".$url."&login=".$bitly_api_login."&apiKey=".$bitly_api_key;
-
-                my $response = $lwp->get($api_src);
-
-                if ($response->is_success)
-                {
-                    my $raw_data = $response->decoded_content;
-
-                    foreach my $line (split(/\n/,$raw_data))
-                    {
-                        if ($line =~ m/shortURL/i)
-                        {
-                            $line =~ s/\"//g;
-                            $line =~ s/,//g;
-
-                            my ($var,$url_bitly) = split(/:/,$line,2);
-
-                            $url_bitly =~ s/ //g;
-                            $url_bitly =~ s/\t//g;
-
-                            #print "url: $url\nbitly: $url_bitly\n";
-                            $irc->yield( privmsg => $channel => "$nick (URL=SUCCESS): $url_bitly" );
-                            $irc->yield( privmsg => $channel => "$line" );
-
-                            last;
-                        }
-                    }
-                    print "Transformed $url to $url_bitly\n";
-                }
-                else
-                {
-                    print "An error occurred while making the HTTP Request: $response->errstr\n";
-                    $irc->yield( privmsg => $channel => "$nick (URL=FAIL): $response->errstr" );
-                }
-            }
+            # AI testing with Eliza
+            $what =~ s/$nickname//;
+            my $reply = $eliza->transform($what);
+            $irc->yield( privmsg => $channel => "$nick: $reply" );
         }
-
         case /^!addquote/
         {
             $what =~ s/!addquote //g;
@@ -271,10 +184,10 @@ sub master_filter
             $quote = read_quote();
             $irc->yield( privmsg => $channel => "$quote" );
         }
-
         case /^!md5sum/
         {
-	    # deprecated. intended to encrypt strings, not files. Needs work. That requires time. Eh.
+            # deprecated. intended to encrypt strings, not files.
+            # Needs work. That requires time. Eh.
             my $encstr = $what;
             $encstr =~ s/^!md5 //;
             my $md5sum = md5sum($encstr);
@@ -283,8 +196,6 @@ sub master_filter
     }
 	return;
 }
-
-
 
 sub add_quote
 {
@@ -375,4 +286,14 @@ if ($use_db)
         }
         return;
     }
+}
+
+sub print_help()
+{
+    print "Usage: $0 [network flag]\n\n";
+    print "Network Flags:\n";
+    print "\t-d|--dalnet (to connect to DALnet)\n";
+    print "\t-e|--efnet (to connect to EFnet)\n";
+    print "\t-f|--freenode (to connect to freenode)";
+    # add more if you wish
 }
