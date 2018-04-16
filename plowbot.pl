@@ -47,6 +47,10 @@ my $irc = POE::Component::IRC->spawn(
     server => $server,
 ) or die "Error spawning the POE IRC Component: $!";
 
+# flat-file quotes data
+our $fquotes = "quotes.txt";
+our $line;
+
 POE::Session->create(
      package_states => [
          main => [ qw(_default _start irc_001 irc_public) ],
@@ -163,10 +167,10 @@ sub master_filter
                 print "Kicking: $who\n";
                 $irc->yield( kick => $channel => msg => "$who *b00ted*" );
             }
-           case /$nickname/
+            case /$nickname/
             {
                 # AI testing with Eliza
-		$what =~ s/$nickname//;
+		        $what =~ s/$nickname//;
                 my $reply = $eliza->transform($what);
                 $irc->yield( privmsg => $channel => "$nick: $reply" );
             }
@@ -254,6 +258,20 @@ sub master_filter
                 }
             }
         }
+
+        case /^!addquote/
+        {
+            $what =~ s/!addquote //g;
+            $who =~ s/\!.*//g;
+            add_quote($what);
+            $irc->yield( privmsg => $channel => "Quote added. Thank you, $who." );
+        }
+        case /^!quote/
+        {
+            $quote = read_quote();
+            $irc->yield( privmsg => $channel => "$quote" );
+        }
+
         case /^!md5sum/
         {
 	    # deprecated. intended to encrypt strings, not files. Needs work. That requires time. Eh.
@@ -264,6 +282,24 @@ sub master_filter
         }
     }
 	return;
+}
+
+
+
+sub add_quote
+{
+    my ($quote) = @_;
+    open(QUOTES, '>>', $fquotes) or print "Error opening $fquotes file.";
+    print QUOTES $quote ."\n";
+    close(QUOTES);
+}
+
+sub read_quote
+{
+    open(QUOTES, '<', $fquotes) or print "Error opening $fquotes file.";
+    rand($.)<1 and ($line=$_) while <QUOTES>;
+    close(QUOTES);
+    return $line;
 }
 
 # this routine returns the md5sum of a specified file.
