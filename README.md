@@ -2,6 +2,8 @@
 
 A simple IRC Bot written in Perl. This project was intended to have a simple channel bot for random things. It was more of an experiment in IRC Bot programming using Perl, but can be used as a boilerplate for creating your own custom IRC bot in perl.
 
+> NOTE: This project is being re-developed using a custom branch, and is currently considered 'not working' in the master branch. Don't bother trying to use this code at the moment. More updates to come. Cheers!
+
 # 3rd-Party Application(s) - Optional
 
 * MySQL Server - Most of this functionality has been deprecated, but you can easily extend the plowbot to collect data to mysql.
