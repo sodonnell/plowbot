@@ -8,6 +8,13 @@
  A simple IRC Bot written in Perl, for no apparent reason.
 
  Written by: Sean O'Donnell <sean@seanodonnell.com>
- Github Repo: https://github.com/sodonnell/plowbot.git
+
+============================================================
+
+ Install Instructions:
+
+ $ git clone https://github.com/sodonnell/plowbot.git
+ $ cd plowbot
+ $ bash install.sh
 
 ============================================================

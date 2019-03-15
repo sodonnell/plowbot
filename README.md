@@ -71,8 +71,7 @@ You can edit the config.pl file prior to executing the install.sh script, or you
 ```
 git clone https://github.com/sodonnell/plowbot.git
 cd plowbot
-chmod +x ./install.sh
-./install.sh
+bash ./install.sh
 ```
 
 ## Installing Required Perl Modules (Manually)
